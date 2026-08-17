@@ -1,0 +1,75 @@
+{% comment %}
+  sections/hero-pantalon.liquid
+  Contient :
+  1. .hero            → le hero plein écran avec l'image du pantalon (.hero-pantalon)
+  2. .scrolly-story    → section "spacer" narrative (distance de scroll du voyage)
+  L'ensemble est enveloppé dans .scrolly-track : c'est CETTE hauteur totale
+  que scrollytelling.js utilise comme trigger pour interpoler la position
+  de .hero-pantalon jusqu'à .grid-target-case (dans la section suivante).
+{% endcomment %}
+
+<div class="scrolly-track" data-scrolly-track>
+
+  <section class="hero">
+    <div class="container hero__grid">
+
+      <div class="hero__content">
+        <span class="eyebrow">{{ section.settings.eyebrow | default: "Collection 2026" }}</span>
+        <h1 class="hero__title">
+          {{ section.settings.title | default: "Taillé pour <em>l'exigence</em>" }}
+        </h1>
+        <p class="hero__desc">
+          {{ section.settings.description | default: "Des coupes précises, des matières nobles. Une garde-robe pensée pour ceux qui ne font aucun compromis." }}
+        </p>
+        <div class="hero__cta">
+          <a href="{{ section.settings.cta_url | default: '/collections/all' }}" class="btn">Découvrir la collection</a>
+          <a href="#recit" class="btn btn--ghost">Notre approche</a>
+        </div>
+      </div>
+
+      <!-- Conteneur qui réserve l'espace : garde la mise en page stable
+           même quand .hero-pantalon passe en position: fixed via JS -->
+      <div class="hero-pantalon-wrap" data-hero-pantalon-wrap>
+        <!-- IMAGE ANIMÉE : cible principale du script GSAP -->
+        <figure class="hero-pantalon" data-hero-pantalon>
+          <span class="hero-pantalon__tag">Nouveau</span>
+          {% if section.settings.pantalon_image != blank %}
+            <img src="{{ section.settings.pantalon_image | image_url: width: 1200 }}"
+                 alt="{{ section.settings.pantalon_image.alt | default: 'Pantalon mis en avant' }}"
+                 loading="eager">
+          {% else %}
+            <!-- PLACEHOLDER : remplacer par le réglage "Image du pantalon" -->
+            <img src="https://placehold.co/900x1200/1B1A21/E8FF3D?text=PANTALON" alt="Placeholder pantalon">
+          {% endif %}
+        </figure>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="scrolly-story" id="recit">
+    <div class="container scrolly-story__inner">
+      <span class="eyebrow">Notre approche</span>
+      <p style="margin-top:22px;">
+        Chaque pièce est <strong>façonnée</strong> avant d'être vendue.
+        Le <mark>pantalon Signature</mark> que vous voyez glisser sous vos yeux
+        rejoint la collection, juste en dessous.
+      </p>
+    </div>
+  </section>
+
+</div>
+
+{% schema %}
+{
+  "name": "Hero — Pantalon Scrolly",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Collection 2026" },
+    { "type": "richtext", "id": "title", "label": "Titre" },
+    { "type": "textarea", "id": "description", "label": "Description" },
+    { "type": "url", "id": "cta_url", "label": "Lien du bouton principal" },
+    { "type": "image_picker", "id": "pantalon_image", "label": "Image du pantalon (Hero)" }
+  ],
+  "presets": [ { "name": "Hero — Pantalon Scrolly" } ]
+}
+{% endschema %}

@@ -1,0 +1,56 @@
+{% comment %}
+  snippets/product-card.liquid
+  Paramètres attendus :
+    - product      : objet produit Shopify (optionnel si placeholders utilisés)
+    - is_target    : (boolean) true pour LA carte qui reçoit l'animation
+                      → ajoute la classe .grid-target-case + data-grid-target
+    - ph_name / ph_price / ph_cat / ph_badge : textes de secours si pas de produit
+
+  Usage :
+    {% render 'product-card', product: product, is_target: true %}
+{% endcomment %}
+
+{%- liquid
+  assign card_name = product.title | default: ph_name | default: 'Nom du produit'
+  assign card_price = product.price | money | default: ph_price | default: '€0,00'
+  assign card_cat = product.type | default: ph_cat | default: 'Catégorie'
+  assign card_badge = ph_badge | default: ''
+  assign card_url = product.url | default: '#'
+-%}
+
+<a href="{{ card_url }}"
+   class="product-card{% if is_target %} grid-target-case{% endif %}"
+   {% if is_target %}data-grid-target{% endif %}>
+
+  <div class="product-card__media">
+    {% if card_badge != '' %}
+      <span class="product-card__badge">{{ card_badge }}</span>
+    {% endif %}
+
+    {% if product.featured_image %}
+      <img src="{{ product.featured_image | image_url: width: 800 }}"
+           alt="{{ product.featured_image.alt | default: card_name }}"
+           loading="lazy">
+    {% else %}
+      <!-- PLACEHOLDER PRODUIT : remplacer par une vraie image/collection Shopify -->
+      <img src="https://placehold.co/700x900/1B1A21/9A96A8?text={{ card_name | url_encode }}"
+           alt="{{ card_name }}"
+           loading="lazy">
+    {% endif %}
+
+    <span class="product-card__quickadd" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </span>
+  </div>
+
+  <div class="product-card__body">
+    <span class="product-card__cat">{{ card_cat }}</span>
+    <h3 class="product-card__name">{{ card_name }}</h3>
+    <div class="product-card__price">
+      <span>{{ card_price }}</span>
+      {% if ph_compare_price %}<span class="price-compare">{{ ph_compare_price }}</span>{% endif %}
+    </div>
+  </div>
+</a>

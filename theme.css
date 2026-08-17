@@ -1,0 +1,594 @@
+/* ==========================================================================
+   THEME.CSS — Boutique haut de gamme
+   Palette : noir profond + violet électrique + jaune acide
+   Typo     : Big Shoulders Display (titres) / Inter (texte) / Space Mono (tags)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+/* ---------- 1. Design tokens ------------------------------------------- */
+:root{
+  /* Couleurs de fond */
+  --color-bg:           #0B0B0E;   /* noir profond, base */
+  --color-bg-soft:      #141318;   /* sections alternées */
+  --color-surface:      #1B1A21;   /* cartes produit */
+  --color-surface-2:    #232129;   /* survol carte */
+
+  /* Couleurs de texte */
+  --color-text:         #F5F3EF;
+  --color-text-muted:   #9A96A8;
+
+  /* Accents vibrants (à ajuster librement) */
+  --color-accent:       #B026FF;   /* violet électrique */
+  --color-accent-2:     #E8FF3D;   /* jaune acide / néon */
+  --color-accent-rgb:   176, 38, 255;
+
+  /* Traits / bordures */
+  --color-line:         rgba(245, 243, 239, 0.10);
+  --color-line-strong:  rgba(245, 243, 239, 0.22);
+
+  /* Typo */
+  --font-display: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:    'Space Mono', ui-monospace, monospace;
+
+  /* Rythme */
+  --container-max: 1360px;
+  --gap-section:   clamp(64px, 10vw, 140px);
+  --radius-card:   18px;
+  --radius-pill:   999px;
+
+  /* Transitions */
+  --ease-premium: cubic-bezier(.16,.84,.24,1);
+}
+
+/* ---------- 2. Reset & base --------------------------------------------- */
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *, *::before, *::after{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+body{
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img{ max-width: 100%; display: block; }
+a{ color: inherit; text-decoration: none; }
+button{ font-family: inherit; cursor: pointer; }
+
+.container{
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
+}
+
+.eyebrow{
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.eyebrow::before{
+  content: "";
+  width: 18px;
+  height: 1px;
+  background: var(--color-accent-2);
+}
+
+h1, h2, h3, .font-display{
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.94;
+  margin: 0;
+}
+
+/* Bouton signature : coin coupé façon étiquette de vêtement */
+.btn{
+  --btn-bg: var(--color-accent-2);
+  --btn-fg: #0B0B0E;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 28px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 100%, 14px 100%);
+  transition: transform .35s var(--ease-premium), background .35s;
+}
+.btn:hover{ transform: translateY(-2px); }
+.btn--ghost{
+  --btn-bg: transparent;
+  --btn-fg: var(--color-text);
+  border: 1px solid var(--color-line-strong);
+  clip-path: none;
+  border-radius: var(--radius-pill);
+}
+.btn--ghost:hover{ border-color: var(--color-accent-2); color: var(--color-accent-2); }
+
+/* ==========================================================================
+   3. HEADER
+   ========================================================================== */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: rgba(11, 11, 14, 0.55);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s ease, background .3s ease;
+}
+.site-header.is-scrolled{
+  background: rgba(11, 11, 14, 0.92);
+  border-bottom-color: var(--color-line);
+}
+
+.site-header__inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 84px;
+}
+
+.site-header__logo{
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.site-header__logo span{ color: var(--color-accent-2); }
+
+.site-nav{
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.4vw, 38px);
+}
+.site-nav a{
+  position: relative;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding: 6px 2px;
+  transition: color .25s;
+}
+.site-nav a::after{
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--color-accent-2);
+  transition: width .3s var(--ease-premium);
+}
+.site-nav a:hover,
+.site-nav a[aria-current="page"]{ color: var(--color-text); }
+.site-nav a:hover::after,
+.site-nav a[aria-current="page"]::after{ width: 100%; }
+
+.site-header__actions{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.header-icon-btn{
+  position: relative;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--color-text);
+  background: transparent;
+  transition: background .25s;
+}
+.header-icon-btn:hover{ background: var(--color-surface); }
+.header-icon-btn svg{ width: 19px; height: 19px; }
+.header-icon-btn .cart-count{
+  position: absolute;
+  top: 2px; right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  border-radius: 50%;
+  background: var(--color-accent-2);
+  color: #0B0B0E;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.header-search{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  padding: 8px 14px;
+  width: 220px;
+  transition: border-color .25s, width .25s;
+}
+.header-search:focus-within{ border-color: var(--color-accent); width: 260px; }
+.header-search input{
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text);
+  font-size: 13px;
+  width: 100%;
+}
+.header-search input::placeholder{ color: var(--color-text-muted); }
+.header-search svg{ width: 16px; height: 16px; flex-shrink: 0; color: var(--color-text-muted); }
+
+.header-burger{ display: none; }
+
+@media (max-width: 900px){
+  .site-nav{ display: none; }
+  .header-search{ display: none; }
+  .header-burger{
+    display: grid;
+    place-items: center;
+    width: 42px; height: 42px;
+  }
+}
+
+/* ==========================================================================
+   4. HERO + SCROLLYTELLING
+   ========================================================================== */
+.scrolly-track{
+  position: relative;
+  /* Hauteur = distance de scroll pendant laquelle le pantalon voyage.
+     Augmenter/diminuer cette valeur ralentit ou accélère la trajectoire. */
+  min-height: 260vh;
+}
+
+.hero{
+  position: relative;
+  height: 100vh;
+  min-height: 640px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.hero::before{
+  /* Halo d'accent en fond, ambiance "spotlight" */
+  content: "";
+  position: absolute;
+  top: -20%; right: -10%;
+  width: 60vw; height: 60vw;
+  background: radial-gradient(circle, rgba(var(--color-accent-rgb), .35), transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.hero__grid{
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 40px;
+}
+
+.hero__content{ max-width: 560px; }
+.hero__title{
+  font-size: clamp(48px, 7vw, 96px);
+  margin-top: 18px;
+}
+.hero__title em{
+  font-style: normal;
+  color: var(--color-accent-2);
+  -webkit-text-stroke: 0;
+}
+.hero__desc{
+  margin-top: 24px;
+  max-width: 420px;
+  color: var(--color-text-muted);
+  font-size: 16px;
+}
+.hero__cta{ margin-top: 36px; display: flex; gap: 14px; flex-wrap: wrap; }
+
+/* Conteneur qui réserve l'espace de l'image dans le hero,
+   même quand l'image passe en position: fixed via JS */
+.hero-pantalon-wrap{
+  position: relative;
+  justify-self: end;
+  width: min(420px, 90%);
+  aspect-ratio: 3 / 4;
+}
+
+/* L'IMAGE ANIMÉE — sélecteur ciblé par scrollytelling.js */
+.hero-pantalon{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,.6);
+  will-change: transform, top, left, width, height;
+}
+.hero-pantalon img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-pantalon__tag{
+  position: absolute;
+  top: 16px; left: 16px;
+  background: var(--color-accent-2);
+  color: #0B0B0E;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* Section intermédiaire = "spacer" narratif entre le hero et la grille,
+   c'est la distance de scroll pendant laquelle le pantalon voyage. */
+.scrolly-story{
+  position: relative;
+  z-index: 1;
+  min-height: 130vh;
+  display: flex;
+  align-items: center;
+  background: var(--color-bg-soft);
+}
+.scrolly-story__inner{ max-width: 620px; }
+.scrolly-story p{
+  font-size: clamp(22px, 3vw, 34px);
+  font-family: var(--font-display);
+  text-transform: none;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text-muted);
+}
+.scrolly-story strong{ color: var(--color-text); }
+.scrolly-story mark{
+  background: none;
+  color: var(--color-accent-2);
+}
+
+@media (max-width: 900px){
+  .hero__grid{ grid-template-columns: 1fr; text-align: left; }
+  .hero-pantalon-wrap{ justify-self: start; width: min(340px, 70%); margin-top: 40px; }
+  .scrolly-track{ min-height: auto; }
+  .scrolly-story{ min-height: auto; padding-block: 80px; }
+}
+
+/* ==========================================================================
+   5. GRILLE PRODUITS
+   ========================================================================== */
+.product-section{
+  padding-block: var(--gap-section);
+  background: var(--color-bg);
+}
+.product-section__head{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 44px;
+  flex-wrap: wrap;
+}
+.product-section__title{ font-size: clamp(34px, 4.4vw, 56px); margin-top: 14px; }
+
+.product-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+@media (max-width: 1100px){ .product-grid{ grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px){ .product-grid{ grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+@media (max-width: 460px){ .product-grid{ grid-template-columns: 1fr; } }
+
+.product-card{
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: transform .4s var(--ease-premium), border-color .4s;
+}
+.product-card:hover{
+  transform: translateY(-6px);
+  border-color: var(--color-line-strong);
+}
+
+.product-card__media{
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background: var(--color-bg-soft);
+  overflow: hidden;
+}
+.product-card__media img{
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .6s var(--ease-premium);
+}
+.product-card:hover .product-card__media img{ transform: scale(1.06); }
+
+.product-card__badge{
+  position: absolute;
+  top: 12px; left: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: var(--color-accent);
+  color: #fff;
+  padding: 5px 9px;
+  border-radius: var(--radius-pill);
+  z-index: 3;
+}
+
+.product-card__quickadd{
+  position: absolute;
+  right: 12px; bottom: 12px;
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  background: var(--color-accent-2);
+  color: #0B0B0E;
+  border-radius: 50%;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .3s, transform .3s;
+}
+.product-card:hover .product-card__quickadd{ opacity: 1; transform: translateY(0); }
+
+.product-card__body{ padding: 16px 16px 18px; }
+.product-card__cat{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.product-card__name{
+  margin-top: 4px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+}
+.product-card__price{
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+.product-card__price .price-compare{
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+/* CASE CIBLE DE L'ANIMATION — le pantalon vient s'encastrer ici */
+.grid-target-case{
+  outline: 2px dashed transparent; /* visible en debug si besoin */
+}
+.grid-target-case .product-card__media{
+  /* Le placeholder statique reste invisible tant que l'image volante
+     n'a pas terminé sa trajectoire (voir scrollytelling.js) */
+}
+.grid-target-case .product-card__media img{
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.grid-target-case.is-docked .product-card__media img{
+  opacity: 1;
+}
+
+/* ==========================================================================
+   6. RÉASSURANCE
+   ========================================================================== */
+.reassurance{
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-bg-soft);
+}
+.reassurance__grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding-block: 40px;
+}
+@media (max-width: 760px){ .reassurance__grid{ grid-template-columns: repeat(2, 1fr); } }
+
+.reassurance__item{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.reassurance__item svg{
+  width: 26px; height: 26px;
+  color: var(--color-accent-2);
+  flex-shrink: 0;
+}
+.reassurance__item h4{
+  margin: 0 0 2px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: none;
+}
+.reassurance__item p{
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   7. FOOTER
+   ========================================================================== */
+.site-footer{
+  background: var(--color-bg);
+  padding-block: 72px 32px;
+}
+.site-footer__grid{
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: 40px;
+}
+@media (max-width: 760px){ .site-footer__grid{ grid-template-columns: 1fr 1fr; } }
+
+.site-footer__brand{ font-family: var(--font-display); font-size: 24px; }
+.site-footer__brand span{ color: var(--color-accent-2); }
+.site-footer p.muted{ color: var(--color-text-muted); font-size: 13.5px; max-width: 320px; }
+
+.site-footer h5{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--color-text-muted);
+  margin: 0 0 14px;
+}
+.site-footer ul{ list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.site-footer a{ font-size: 13.5px; color: var(--color-text); }
+.site-footer a:hover{ color: var(--color-accent-2); }
+
+.site-footer__bottom{
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-line);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}

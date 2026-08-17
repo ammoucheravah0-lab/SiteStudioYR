@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "hero": { "type": "hero-pantalon" },
+    "featured": { "type": "featured-collection" },
+    "reassurance": { "type": "reassurance" }
+  },
+  "order": ["hero", "featured", "reassurance"]
+}

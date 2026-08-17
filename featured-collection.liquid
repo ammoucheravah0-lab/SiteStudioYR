@@ -1,0 +1,70 @@
+{% comment %}
+  sections/featured-collection.liquid
+  Grille de produits phares. Le 5e élément (1re carte de la 2e ligne, donc
+  BAS-GAUCHE sur une grille à 4 colonnes) est marqué comme .grid-target-case :
+  c'est là que .hero-pantalon vient s'encastrer à la fin du scroll.
+
+  Si vous changez le nombre de colonnes ou de produits, repositionnez la cible
+  avec `grid-column` / `grid-row` en CSS plutôt que de compter sur l'ordre DOM.
+{% endcomment %}
+
+<section class="product-section" id="produits">
+  <div class="container">
+
+    <div class="product-section__head">
+      <div>
+        <span class="eyebrow">{{ section.settings.eyebrow | default: "Sélection" }}</span>
+        <h2 class="product-section__title">{{ section.settings.title | default: "Pièces phares" }}</h2>
+      </div>
+      <a href="{{ section.settings.view_all_url | default: '/collections/all' }}" class="btn btn--ghost">Voir tout</a>
+    </div>
+
+    <div class="product-grid">
+
+      {% comment %} Carte 1 {% endcomment %}
+      {% render 'product-card', ph_name: 'Veste Overshirt', ph_cat: 'Tenues', ph_price: '€189,00', ph_badge: 'Best-seller' %}
+
+      {% comment %} Carte 2 {% endcomment %}
+      {% render 'product-card', ph_name: 'Short Tech', ph_cat: 'Shorts', ph_price: '€79,00' %}
+
+      {% comment %} Carte 3 {% endcomment %}
+      {% render 'product-card', ph_name: 'Polo Mercerisé', ph_cat: 'T-shirts & Polos', ph_price: '€99,00' %}
+
+      {% comment %} Carte 4 {% endcomment %}
+      {% render 'product-card', ph_name: 'T-shirt Structuré', ph_cat: 'T-shirts & Polos', ph_price: '€65,00' %}
+
+      {% comment %}
+        Carte 5 — CASE CIBLE DE L'ANIMATION (bas-gauche en grille 4 colonnes)
+        is_target: true → ajoute .grid-target-case utilisée par scrollytelling.js
+      {% endcomment %}
+      {% render 'product-card',
+                 is_target: true,
+                 ph_name: 'Pantalon Signature',
+                 ph_cat: 'Pantalons',
+                 ph_price: '€149,00',
+                 ph_badge: 'Nouveau' %}
+
+      {% comment %} Carte 6 {% endcomment %}
+      {% render 'product-card', ph_name: 'Chino Ajusté', ph_cat: 'Pantalons', ph_price: '€129,00' %}
+
+      {% comment %} Carte 7 {% endcomment %}
+      {% render 'product-card', ph_name: 'Short Tailleur', ph_cat: 'Shorts', ph_price: '€89,00' %}
+
+      {% comment %} Carte 8 {% endcomment %}
+      {% render 'product-card', ph_name: 'Polo Piqué', ph_cat: 'T-shirts & Polos', ph_price: '€95,00' %}
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Grille produits phares",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Sélection" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Pièces phares" },
+    { "type": "url", "id": "view_all_url", "label": "Lien 'Voir tout'" }
+  ],
+  "presets": [ { "name": "Grille produits phares" } ]
+}
+{% endschema %}

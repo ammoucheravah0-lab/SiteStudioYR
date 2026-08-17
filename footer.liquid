@@ -1,0 +1,58 @@
+{% comment %} sections/footer.liquid {% endcomment %}
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+
+    <div>
+      <div class="site-footer__brand">{{ section.settings.logo_text | default: "STUDIO" }}<span>.</span></div>
+      <p class="muted" style="margin-top:14px;">
+        {{ section.settings.description | default: "Vêtements haut de gamme, conçus pour durer. Coupes précises, matières nobles." }}
+      </p>
+    </div>
+
+    <div>
+      <h5>Boutique</h5>
+      <ul>
+        <li><a href="/collections/tenues">Tenues</a></li>
+        <li><a href="/collections/shorts">Shorts</a></li>
+        <li><a href="/collections/t-shirts-polos">T-shirts &amp; Polos</a></li>
+        <li><a href="/collections/pantalons">Pantalons</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h5>Aide</h5>
+      <ul>
+        <li><a href="/pages/contact">Contact</a></li>
+        <li><a href="/pages/livraison">Livraison</a></li>
+        <li><a href="/pages/retours">Retours</a></li>
+        <li><a href="/pages/faq">FAQ</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h5>Newsletter</h5>
+      <p class="muted" style="margin-bottom:14px;">Nouveautés et accès prioritaire aux ventes privées.</p>
+      {% form 'customer' %}
+        <div class="header-search" style="width:100%;">
+          <input type="email" name="contact[email]" placeholder="Votre email" required aria-label="Email">
+        </div>
+      {% endform %}
+    </div>
+
+  </div>
+
+  <div class="container site-footer__bottom">
+    <span>&copy; {{ 'now' | date: '%Y' }} {{ section.settings.logo_text | default: "STUDIO" }}. Tous droits réservés.</span>
+    <span>Paiement sécurisé — Livraison Europe</span>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "text", "id": "logo_text", "label": "Nom de la marque", "default": "STUDIO" },
+    { "type": "textarea", "id": "description", "label": "Description" }
+  ]
+}
+{% endschema %}
