@@ -62,10 +62,32 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
+    // Animation d'entrée : le pantalon descend et apparaît en fondu au
+    // chargement de la page, AVANT que la logique de scroll ne prenne le relais.
+    // Utilise "y" (transform translateY) qui ne rentre pas en conflit avec les
+    // propriétés top/left/width/height pilotées plus bas par le scroll.
+    playDropInEntrance();
+
     if (prefersReducedMotion || isMobile) {
       runSimpleFallback();
     } else {
       runFlyingAnimation();
+    }
+
+    /* ---------------------------------------------------------------
+       Animation d'entrée (descend + fondu) — indépendante du scroll
+    --------------------------------------------------------------- */
+    function playDropInEntrance() {
+      if (prefersReducedMotion) {
+        // Accessibilité : on affiche directement l'état final, sans mouvement.
+        gsap.set(pantalon, { opacity: 1, y: 0 });
+        return;
+      }
+      gsap.fromTo(
+        pantalon,
+        { y: -90, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.15, ease: "power3.out", delay: 0.15 }
+      );
     }
 
     /* ---------------------------------------------------------------
