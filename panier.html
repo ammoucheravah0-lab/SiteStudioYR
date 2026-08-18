@@ -30,7 +30,7 @@
       <a href="compte.html" class="header-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
       <a href="panier.html" class="header-icon-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span class="cart-count">2</span>
+        <span class="cart-count">0</span>
       </a>
     </div>
   </div>
@@ -38,14 +38,27 @@
 
 <main>
   <section class="product-section" style="padding-top:64px;">
-    <div class="container" style="max-width:480px;">
-      <span class="eyebrow">Panier</span>
-      <h1 class="product-section__title" style="margin-top:14px;">Votre panier</h1>
+    <div class="container" style="max-width:520px; text-align:center;">
+      <div style="width:76px; height:76px; margin:0 auto 24px; border-radius:50%; background:var(--color-surface); border:1px solid var(--color-line); display:grid; place-items:center;">
+        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="var(--color-accent-2)" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </div>
+      <span class="eyebrow" style="justify-content:center;">Panier</span>
+      <h1 class="product-section__title" style="margin-top:14px;">Votre panier est vide</h1>
       <p style="color:var(--color-text-muted); margin-top:14px;">
-        Le panier et le paiement seront activés avec la mise en ligne officielle de la boutique.
-        En attendant, parcourez la collection et revenez dès l'ouverture.
+        Le paiement en ligne sera activé avec la mise en ligne officielle de la boutique.
+        En attendant, parcourez la collection — vos articles favoris n'attendent que vous.
       </p>
-      <a href="boutique.html" class="btn" style="margin-top:28px;">Voir la collection</a>
+
+      <div style="margin-top:32px; padding:20px; background:var(--color-surface); border:1px solid var(--color-line); border-radius:var(--radius-card); text-align:left;">
+        <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:13px; color:var(--color-text-muted);">
+          <span>Sous-total</span><span>€0,00</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:13px; color:var(--color-text-muted); margin-top:8px;">
+          <span>Livraison</span><span>Calculée à l'étape suivante</span>
+        </div>
+      </div>
+
+      <a href="boutique.html" class="btn" style="margin-top:28px;">Découvrir la collection</a>
     </div>
   </section>
 </main>

@@ -288,16 +288,13 @@ h1, h2, h3, .font-display{
   background: radial-gradient(circle, rgba(var(--color-accent-rgb), .35), transparent 70%);
   filter: blur(40px);
   pointer-events: none;
+  z-index: 0;
 }
 
 .hero__grid{
   position: relative;
-  z-index: 2;
+  z-index: 3;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  align-items: center;
-  gap: 40px;
 }
 
 .hero__content{ max-width: 560px; }
@@ -318,25 +315,53 @@ h1, h2, h3, .font-display{
 }
 .hero__cta{ margin-top: 36px; display: flex; gap: 14px; flex-wrap: wrap; }
 
-/* Conteneur qui réserve l'espace de l'image dans le hero,
-   même quand l'image passe en position: fixed via JS */
+/* Conteneur plein-hauteur du panneau image, collé au bord droit du hero.
+   C'est lui qui définit la zone que .hero-pantalon occupe au repos. */
 .hero-pantalon-wrap{
-  position: relative;
-  justify-self: end;
-  width: min(420px, 90%);
-  aspect-ratio: 3 / 4;
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: min(58%, 920px);
+  z-index: 1;
+  overflow: hidden;
 }
 
-/* L'IMAGE ANIMÉE — sélecteur ciblé par scrollytelling.js */
+/* Dégradé qui fond l'image dans le fond sombre côté gauche du panneau,
+   pour un rendu "éditorial" plutôt qu'une carte flottante qui coupe l'oeil. */
+.hero-pantalon-wrap::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    var(--color-bg) 0%,
+    rgba(11, 11, 14, 0.88) 14%,
+    rgba(11, 11, 14, 0.45) 30%,
+    rgba(11, 11, 14, 0) 55%
+  );
+  opacity: var(--fade-opacity, 1);
+  pointer-events: none;
+}
+/* Léger voile en bas pour garder les infos (badge, etc.) lisibles */
+.hero-pantalon-wrap::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(11,11,14,0) 70%, rgba(11,11,14,.5) 100%);
+  opacity: var(--fade-opacity, 1);
+  pointer-events: none;
+}
+
+/* L'IMAGE ANIMÉE — sélecteur ciblé par scrollytelling.js.
+   Au repos elle remplit tout .hero-pantalon-wrap (plein-hauteur, bord à bord). */
 .hero-pantalon{
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 40px 80px -20px rgba(0,0,0,.6);
-  will-change: transform, top, left, width, height;
+  will-change: transform, top, left, width, height, rotate;
 }
 .hero-pantalon img{
   width: 100%;
@@ -345,7 +370,8 @@ h1, h2, h3, .font-display{
 }
 .hero-pantalon__tag{
   position: absolute;
-  top: 16px; left: 16px;
+  top: 24px; left: 24px;
+  z-index: 3;
   background: var(--color-accent-2);
   color: #0B0B0E;
   font-family: var(--font-mono);
@@ -383,8 +409,16 @@ h1, h2, h3, .font-display{
 }
 
 @media (max-width: 900px){
-  .hero__grid{ grid-template-columns: 1fr; text-align: left; }
-  .hero-pantalon-wrap{ justify-self: start; width: min(340px, 70%); margin-top: 40px; }
+  .hero{ height: auto; min-height: auto; padding-block: 120px 60px; }
+  .hero-pantalon-wrap{
+    position: relative;
+    top: auto; right: auto; bottom: auto;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    margin-top: 40px;
+    border-radius: 18px;
+  }
+  .hero-pantalon-wrap::before{ background: linear-gradient(180deg, rgba(11,11,14,.35) 0%, rgba(11,11,14,0) 30%); }
   .scrolly-track{ min-height: auto; }
   .scrolly-story{ min-height: auto; padding-block: 80px; }
 }
@@ -552,7 +586,70 @@ h1, h2, h3, .font-display{
 }
 
 /* ==========================================================================
-   7. FOOTER
+   8. ÉQUIPE / COORDONNÉES
+   ========================================================================== */
+.team-section{ margin-top: 64px; }
+.team-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+  margin-top: 28px;
+}
+@media (max-width: 560px){ .team-grid{ grid-template-columns: 1fr; } }
+
+.team-card{
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  padding: 30px 22px;
+  text-align: center;
+  transition: border-color .3s, transform .3s var(--ease-premium);
+}
+.team-card:hover{ border-color: var(--color-line-strong); transform: translateY(-4px); }
+
+.team-card__avatar{
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 18px;
+  display: block;
+  border: 2px solid var(--color-accent-2);
+}
+
+.team-card__name{
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 17px;
+  text-transform: none;
+  margin: 0 0 4px;
+}
+.team-card__role{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--color-text-muted);
+  margin: 0 0 16px;
+}
+.team-card__links{
+  display: grid;
+  gap: 8px;
+}
+.team-card__links a{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  transition: color .25s;
+}
+.team-card__links a:hover{ color: var(--color-accent-2); }
+.team-card__links svg{ width: 14px; height: 14px; flex-shrink: 0; }
+/* ==========================================================================
+   9. FOOTER
    ========================================================================== */
 .site-footer{
   background: var(--color-bg);

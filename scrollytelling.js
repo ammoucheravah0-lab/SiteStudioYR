@@ -62,32 +62,19 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Animation d'entrée : le pantalon descend et apparaît en fondu au
-    // chargement de la page, AVANT que la logique de scroll ne prenne le relais.
-    // Utilise "y" (transform translateY) qui ne rentre pas en conflit avec les
-    // propriétés top/left/width/height pilotées plus bas par le scroll.
-    playDropInEntrance();
+    // Fondu léger au chargement (pas de mouvement) : l'image est déjà en
+    // place dès le premier pixel de la page. La descente / rotation /
+    // rétrécissement est ENTIÈREMENT pilotée par le scroll ci-dessous —
+    // aucune animation "auto-jouée" qui donnerait l'impression que le
+    // pantalon est déjà arrivé avant même d'avoir scrollé.
+    if (!prefersReducedMotion) {
+      gsap.fromTo(pantalon, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.out" });
+    }
 
     if (prefersReducedMotion || isMobile) {
       runSimpleFallback();
     } else {
       runFlyingAnimation();
-    }
-
-    /* ---------------------------------------------------------------
-       Animation d'entrée (descend + fondu) — indépendante du scroll
-    --------------------------------------------------------------- */
-    function playDropInEntrance() {
-      if (prefersReducedMotion) {
-        // Accessibilité : on affiche directement l'état final, sans mouvement.
-        gsap.set(pantalon, { opacity: 1, y: 0 });
-        return;
-      }
-      gsap.fromTo(
-        pantalon,
-        { y: -90, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.15, ease: "power3.out", delay: 0.15 }
-      );
     }
 
     /* ---------------------------------------------------------------
@@ -98,27 +85,19 @@
 
       targetMedia = target.querySelector(".product-card__media img");
 
-      // Capture les rectangles de départ (position naturelle du hero)
-      // et d'arrivée (position de la carte produit dans la grille).
+      // Capture le rectangle de départ = le panneau .hero-pantalon-wrap
+      // (plein-hauteur, collé à droite) et celui d'arrivée = la carte produit.
+      // Le wrap est en position: absolute avec une taille propre (inset/width),
+      // donc sa taille ne dépend pas de la position de la figure à l'intérieur
+      // — inutile de "réinitialiser" la position avant de mesurer.
       function measure() {
-        // On force l'image à revenir en flux normal le temps de mesurer,
-        // pour ne pas mesurer sa propre position "fixed" précédente.
-        var prevPosition = pantalon.style.position;
-        pantalon.style.position = "absolute";
-        pantalon.style.top = "0";
-        pantalon.style.left = "0";
-
-        startRect = pantalon.getBoundingClientRect();
         var wrapRect = pantalon.parentElement.getBoundingClientRect();
-        // Position réelle du pantalon dans le document (pas juste le viewport)
         startRect = {
           top: wrapRect.top + window.scrollY,
           left: wrapRect.left + window.scrollX,
           width: wrapRect.width,
           height: wrapRect.height
         };
-
-        pantalon.style.position = prevPosition;
 
         var tRect = target.getBoundingClientRect();
         endRect = {
@@ -142,20 +121,22 @@
         trigger: track,
         start: "top top",
         end: "bottom bottom",
-        scrub: 1, // suit le scroll avec un léger amorti (fluidité)
+        scrub: 0.35, // très réactif : suit le scroll quasi en temps réel (peu d'amorti)
 
         onUpdate: function (self) {
-          var p = self.progress; // 0 → 1 sur toute la hauteur de .scrolly-track
+          var p = self.progress; // 0 → 1, en prise directe avec le scroll de l'utilisateur
 
           // Interpolation linéaire entre le rectangle de départ et d'arrivée.
-          // Convertit les coordonnées "document" en coordonnées "viewport"
-          // puisque l'élément est en position: fixed.
+          // Conversion "document" → "viewport" car l'élément est en position: fixed.
           var top    = gsap.utils.interpolate(startRect.top,    endRect.top,    p) - window.scrollY;
           var left   = gsap.utils.interpolate(startRect.left,   endRect.left,   p) - window.scrollX;
           var width  = gsap.utils.interpolate(startRect.width,  endRect.width,  p);
           var height = gsap.utils.interpolate(startRect.height, endRect.height, p);
-          var radius = gsap.utils.interpolate(20, 12, p);
-          var rotate = gsap.utils.interpolate(-4, 0, p); // légère bascule initiale
+          // Bords vifs au départ (panneau plein écran) → carte arrondie à l'arrivée
+          var radius = gsap.utils.interpolate(0, 14, p);
+          // ROTATION "tumbling" bien visible : 0° au départ, bascule à mi-parcours,
+          // puis se redresse pile à l'arrivée dans la case produit (0° final).
+          var rotate = Math.sin(p * Math.PI) * -16;
 
           gsap.set(pantalon, {
             top: top,
@@ -164,6 +145,13 @@
             height: height,
             borderRadius: radius,
             rotate: rotate
+          });
+
+          // Le dégradé du panneau plein-hauteur doit disparaître progressivement
+          // dès que la carte commence à se détacher (sinon on verrait le
+          // dégradé rétrécir avec l'image, ce qui casse l'effet).
+          gsap.set(pantalon.parentElement, {
+            "--fade-opacity": 1 - gsap.utils.clamp(0, 1, p / 0.25)
           });
 
           // Juste avant la fin : on fait apparaître l'image statique de la
